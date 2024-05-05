@@ -179,7 +179,7 @@ def take_user_input():
 
     db.commit()
     db.close()
-    print (''' 
+    print('''
             Aircraft accepted''')
 
 
