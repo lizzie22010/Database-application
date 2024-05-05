@@ -15,9 +15,18 @@ def print_all_aircraft():
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all the results
-    print("name                          speed   max_g climb range payload")
+    print('''
+name                          speed   max_g climb range payload
+                            ''')
     for fighter in results:
-        print(f"{fighter[1]:<30}{fighter[2]:<8}{fighter[3]:<6}{fighter[4]:<6}{fighter[5]:<6}{fighter[6]:<6}")
+        print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
     # loop finished here
     db.close()
 
@@ -30,9 +39,18 @@ def print_all_aircraft_by_speed():
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all the results
-    print ("name                          speed   max_g climb range payload")
+    print('''
+name                          speed   max_g climb range payload
+                            ''')
     for fighter in results:
-        print(f"{fighter[1]:<30}{fighter[2]:<8}{fighter[3]:<6}{fighter[4]:<6}{fighter[5]:<6}{fighter[6]:<6}")
+        print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
     # loop finished here
     db.close()
 
@@ -45,9 +63,18 @@ def print_all_aircraft_by_g():
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all the results
-    print ("name                          speed   max_g climb range payload")
+    print('''
+name                          speed   max_g climb range payload
+                            ''')
     for fighter in results:
-        print(f"{fighter[1]:<30}{fighter[2]:<8}{fighter[3]:<6}{fighter[4]:<6}{fighter[5]:<6}{fighter[6]:<6}")
+        print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
     # loop finished here
     db.close()
 
@@ -60,9 +87,18 @@ def print_all_aircraft_by_climb():
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all the results
-    print ("name                          speed   max_g climb range payload")
+    print('''
+name                          speed   max_g climb range payload
+                            ''')
     for fighter in results:
-        print(f"{fighter[1]:<30}{fighter[2]:<8}{fighter[3]:<6}{fighter[4]:<6}{fighter[5]:<6}{fighter[6]:<6}")
+        print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
     # loop finished here
     db.close()
 
@@ -75,9 +111,18 @@ def print_all_aircraft_by_range():
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all the results
-    print ("name                          speed   max_g climb range payload")
+    print('''
+name                          speed   max_g climb range payload
+                            ''')
     for fighter in results:
-        print(f"{fighter[1]:<30}{fighter[2]:<8}{fighter[3]:<6}{fighter[4]:<6}{fighter[5]:<6}{fighter[6]:<6}")
+        print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
     # loop finished here
     db.close()
 
@@ -86,29 +131,71 @@ def print_all_aircraft_by_payload():
     '''print all the aircraft sorted by payload'''
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
-    sql = "select * from fighter ORDER BY speed DESC;"
+    sql = "select * from fighter ORDER BY payload DESC;"
     cursor.execute(sql)
     results = cursor.fetchall()
     # loop through all the results
-    print ("name                          speed   max_g climb range payload")
+    print('''
+name                          speed   max_g climb range payload
+                            ''')
     for fighter in results:
-        print(f"{fighter[1]:<30}{fighter[2]:<8}{fighter[3]:<6}{fighter[4]:<6}{fighter[5]:<6}{fighter[6]:<6}")
+        print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
     # loop finished here
     db.close()
+
+
+def take_user_input():
+    '''add a user intput into the database'''
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    # Create a table if it doesn't exist
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY,
+                    aircraft TEXT,
+                    speed INTEGER
+                    max_g REAL
+                    climbrate INTEGER
+                    range INTEGER
+                    payload INTEGER
+                )''')
+
+    aircraft = input("Enter the aircraft name: ")
+    speed = int(input("Enter the speed: "))
+    max_g = float(input("Enter the max_g: "))
+    climbrate = int(input("Enter the climbrate: "))
+    range = int(input("Enter the range: "))
+    payload = int(input("Enter the payload: "))
+    cursor.execute(
+        '''INSERT INTO fighter (aircraft, speed, max_g, climbrate, range,
+        payload) VALUES (?, ?, ?, ?, ?, ?)''',
+        (aircraft, speed, max_g, climbrate, range, payload))
+
+    db.commit()
+    db.close()
+    print (''' 
+            Aircraft accepted''')
 
 
 # main code
 while True:
     user_input = input(
-    """
-What would you like to do?
-1. Print all aircraft
-2. Print all aircraft sorted by speed
-3. Print all aircraft sorted by max g force
-4. Print all aircraft sorted by climb
-5. Print all aircraft sorted by range
-6. Print all aircraft sorted by payload
-7. Exit
+        """
+    What would you like to do?
+    1. Print all aircraft
+    2. Print all aircraft sorted by speed
+    3. Print all aircraft sorted by max g force
+    4. Print all aircraft sorted by climb
+    5. Print all aircraft sorted by range
+    6. Print all aircraft sorted by payload
+    7. Add an input
+    8. Exit
 """)
     if user_input == "1":
         print_all_aircraft()
@@ -123,6 +210,8 @@ What would you like to do?
     elif user_input == "6":
         print_all_aircraft_by_payload()
     elif user_input == "7":
+        take_user_input()
+    elif user_input == "8":
         break
     else:
-        print("That was not an option\n")
+        print("That is not an option\n")
