@@ -16,10 +16,37 @@ def print_all_aircraft():
     results = cursor.fetchall()
     # loop through all the results
     print('''
+
 name                          speed   max_g climb range payload
                             ''')
     for fighter in results:
         print(
+            f"{fighter[1]:<30}"
+            f"{fighter[2]:<8}"
+            f"{fighter[3]:<6}"
+            f"{fighter[4]:<6}"
+            f"{fighter[5]:<6}"
+            f"{fighter[6]:<6}"
+            )
+    # loop finished here
+    db.close()
+
+
+def print_all_aircraft_with_id():
+    '''include aircraft id in printed table'''
+    db = sqlite3.connect("fighters.db")
+    cursor = db.cursor()
+    sql = "select * from fighter;"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    # loop through all the results
+    print('''
+
+id      name                          speed   max_g climb range payload
+                            ''')
+    for fighter in results:
+        print(
+            f"{fighter[0]:<6}"
             f"{fighter[1]:<30}"
             f"{fighter[2]:<8}"
             f"{fighter[3]:<6}"
@@ -183,10 +210,31 @@ def take_user_input():
             Aircraft accepted''')
 
 
+def remove_user_input():
+    '''remove an intput from the database'''
+    while True:
+        # show user the current data (with id)
+        print_all_aircraft_with_id()
+        id = int(input("""
+Which aircraft would you like to delete? Type 0 to cancel.
+"""))
+        if id == 0:
+            break
+        else:
+            db = sqlite3.connect(DATABASE)
+            cursor = db.cursor()
+            sql = "DELETE FROM fighter WHERE id = ?;"
+            cursor.execute(sql, (id,))
+            db.commit()
+            print("""
+                Aircraft""", id, """successfully deleted""")
+
+
 # main code
 while True:
     user_input = input(
         """
+
     What would you like to do?
     1. Print all aircraft
     2. Print all aircraft sorted by speed
@@ -195,7 +243,8 @@ while True:
     5. Print all aircraft sorted by range
     6. Print all aircraft sorted by payload
     7. Add an input
-    8. Exit
+    8. Remove an input
+    9. Exit
 """)
     if user_input == "1":
         print_all_aircraft()
@@ -212,6 +261,8 @@ while True:
     elif user_input == "7":
         take_user_input()
     elif user_input == "8":
+        remove_user_input()
+    elif user_input == "9":
         break
     else:
         print("That is not an option\n")
